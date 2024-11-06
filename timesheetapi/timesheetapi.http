@@ -1,0 +1,6 @@
+@timesheetapi_HostAddress = http://localhost:5168
+
+GET {{timesheetapi_HostAddress}}/weatherforecast/
+Accept: application/json
+
+###
