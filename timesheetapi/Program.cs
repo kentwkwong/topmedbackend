@@ -10,6 +10,7 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddTransient<UserService>();
 builder.Services.AddTransient<TruckService>();
 builder.Services.AddTransient<TimesheetService>();
+builder.Services.AddTransient<EmailService>();
 
 
 builder.Services.AddEndpointsApiExplorer();
@@ -20,20 +21,19 @@ builder.Services.AddDbContext<ApiDbContext>(options =>
     options.UseSqlite(conn));
 
 var app = builder.Build();
-
-// Configure the HTTP request pipeline.
-if (app.Environment.IsDevelopment())
-{
-    app.UseSwagger();
-    app.UseSwaggerUI();
-}
-
+app.UseSwagger();
+app.UseSwaggerUI();
 app.UseHttpsRedirection();
 
 var summaries = new[]
 {
     "Freezing", "Bracing", "Chilly", "Cool", "Mild", "Warm", "Balmy", "Hot", "Sweltering", "Scorching"
 };
+
+app.MapPost("/api/sendemail", (Timesheet obj) =>
+{
+    return Results.Ok(EmailService.SendEmail(obj));
+});
 
 app.MapGet("/api/users", (UserService users) =>
 {
